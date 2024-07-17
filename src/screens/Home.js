@@ -7,8 +7,9 @@ import CardProductos from '../components/CardProductos'; // Importa el component
 
 // Definición del componente principal Home
 const Home = ({ navigation }) => {
-    // Definición del estado local para almacenar los productos
+    // Definición del estado local para almacenar los productos y el estado de carga
     const [productos, setProductos] = useState([]);
+    const [cargando, setCargando] = useState(true); // Estado de carga
 
     // useEffect se ejecuta cuando el componente se monta
     useEffect(() => {
@@ -22,8 +23,9 @@ const Home = ({ navigation }) => {
                 // Empuja cada documento con su ID a la lista de docs
                 docs.push({ id: doc.id, ...doc.data() });
             });
-            // Actualiza el estado de productos con los datos recibidos
+            // Actualiza el estado de productos con los datos recibidos y cambia el estado de carga
             setProductos(docs);
+            setCargando(false); // Termina el estado de carga
         });
 
         // Limpieza de la suscripción al desmontar el componente
@@ -51,29 +53,29 @@ const Home = ({ navigation }) => {
         <View style={styles.container}>
             <Text style={styles.title}>Productos Disponibles</Text>
 
-            {/* Muestra la lista de productos si hay elementos, de lo contrario muestra un mensaje */}
-            {
-                productos.length !== 0 ?
-                    <FlatList
-                        data={productos}
-                        renderItem={renderItem}
-                        keyExtractor={(item) => item.id}
-                        contentContainerStyle={styles.list}
-                    />
-                    :
-                    <Text style={styles.Subtitle}>No hay productos disponibles</Text>
-            }
+            {/* Muestra un mensaje de carga o la lista de productos */}
+            {cargando ? (
+                <Text style={styles.loading}>Cargando...</Text>
+            ) : productos.length !== 0 ? (
+                <FlatList
+                    data={productos}
+                    renderItem={renderItem}
+                    keyExtractor={(item) => item.id}
+                    contentContainerStyle={styles.list}
+                />
+            ) : (
+                <Text style={styles.subtitle}>No hay productos registrados</Text>
+            )}
 
             {/* Botón para navegar a la pantalla de agregar productos */}
             <TouchableOpacity
-                style={styles.Button}
+                style={styles.button}
                 onPress={goToAdd}>
-                <Text style={styles.ButtonText}>Agregar Producto</Text>
+                <Text style={styles.buttonText}>Agregar Producto</Text>
             </TouchableOpacity>
         </View>
     );
 };
-
 
 // Exporta el componente Home como predeterminado
 export default Home;
@@ -92,14 +94,20 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginBottom: 20,
     },
-    Subtitle: {
+    loading: {
+        fontSize: 20,
+        textAlign: 'center',
+        marginBottom: 10,
+        color: '#0288d1',
+    },
+    subtitle: {
         fontSize: 20,
         fontWeight: 'bold',
         textAlign: 'center',
         marginBottom: 10,
-        color: '#ff9800'
+        color: '#ff9800',
     },
-    Button: {
+    button: {
         backgroundColor: '#0288d1',
         padding: 10,
         borderRadius: 5,
@@ -107,7 +115,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 50,
         paddingVertical: 20,
     },
-    ButtonText: {
+    buttonText: {
         color: 'white',
         fontWeight: 'bold',
         textAlign: 'center',

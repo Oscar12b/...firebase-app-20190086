@@ -1,9 +1,11 @@
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApps } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from 'firebase/storage';
+import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_KEY, AUTH_DOMAIN, PROJECT_ID, STORAGE_BUCKET, MESSAGING_SENDER_ID, APP_ID } from '@env';
 
-// Your web app's Firebase configuration
+// Configuración de Firebase
 const firebaseConfig = {
     apiKey: API_KEY,
     authDomain: AUTH_DOMAIN,
@@ -13,29 +15,32 @@ const firebaseConfig = {
     appId: APP_ID
 };
 
-console.log("Valor de configuracion", firebaseConfig);
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-if (app) {
+// Inicializar Firebase solo si no existe una instancia
+let app;
+if (!getApps().length) {
+    app = initializeApp(firebaseConfig);
     console.log('Firebase initialized successfully');
 } else {
-    console.log('Firebase initialization failed');
+    app = getApps()[0];
+    console.log('Firebase already initialized');
 }
 
 const database = getFirestore(app);
+const storage = getStorage(app);
+const auth = initializeAuth(app, {
+    persistence: getReactNativePersistence(AsyncStorage)
+});
+
 if (database) {
     console.log('Firestore initialized correctly');
 } else {
     console.log('Firestore initialization failed');
 }
 
-const storage = getStorage(app);
-
 if (storage) {
-    console.log('storage initialized correctly');
+    console.log('Storage initialized correctly');
 } else {
-    console.log('storage initialization failed');
+    console.log('Storage initialization failed');
 }
 
-export { database, storage };
+export { app, database, storage, auth };

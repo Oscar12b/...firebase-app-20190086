@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "...firebase-app-20190086",
-    "slug": "...firebase-app-20190086",
+    "name": "firebase-app-20190086",
+    "slug": "firebase-app-20190086",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -12,16 +12,23 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.oscarpruebasdev.firebaseapp20190086"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.oscarpruebasdev.firebaseapp20190086"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "784963f3-ac3e-4855-a95a-1ced99584573"
+      }
     }
   }
 }
